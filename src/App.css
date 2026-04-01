@@ -108,6 +108,76 @@
   text-decoration: underline;
 }
 
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: #1a1a2e;
+  flex-shrink: 0;
+}
+
+.timeline-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e9c46a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  min-width: 30px;
+}
+
+.timeline-bound {
+  font-size: 0.8rem;
+  color: #aaa;
+  min-width: 36px;
+  text-align: center;
+}
+
+.timeline-slider-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-year {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  min-width: 44px;
+  text-align: center;
+}
+
+.timeline-btn {
+  background: #2e2e4e;
+  border: 1px solid #444;
+  color: #e9c46a;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.timeline-btn:hover {
+  background: #3a3a5e;
+}
+
+.timeline-slider {
+  width: 100%;
+  accent-color: #e9c46a;
+  cursor: pointer;
+}
+
 .legend-empty {
   font-size: 0.82rem;
   color: #999;
