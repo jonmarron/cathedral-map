@@ -1,23 +1,42 @@
+/* ── Reset ─────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100vh;          /* fallback */
+  height: 100dvh;         /* mobile: excludes browser chrome */
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── App shell ─────────────────────────────────────── */
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh;
   font-family: system-ui, sans-serif;
+  overflow: hidden;
 }
 
+/* ── Header ────────────────────────────────────────── */
 .header {
   background: #1a1a2e;
   color: #fff;
-  padding: 12px 20px 0;
+  padding: 10px 16px 0;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .header h1 {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .tabs {
@@ -26,14 +45,15 @@
 }
 
 .tab {
-  padding: 7px 18px;
+  padding: 7px 16px;
   border: none;
   border-radius: 6px 6px 0 0;
   background: #2e2e4e;
   color: #aaa;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -47,50 +67,77 @@
   font-weight: 600;
 }
 
+/* ── Map ───────────────────────────────────────────── */
 .map {
   flex: 1;
   min-height: 0;
-  height: 100%;
 }
 
+/* ── Legend ────────────────────────────────────────── */
 .legend {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 20px;
-  padding: 10px 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px 16px;
+  padding: 7px 14px;
   background: #f5f5f5;
   border-top: 1px solid #ddd;
   flex-shrink: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #333;
+  white-space: nowrap;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-empty {
+  font-size: 0.78rem;
+  color: #999;
+  font-style: italic;
+}
+
+/* ── Popup ─────────────────────────────────────────── */
 .popup {
-  min-width: 200px;
-  max-width: 240px;
+  min-width: 190px;
+  max-width: 230px;
   line-height: 1.4;
 }
 
 .popup-city {
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   margin-bottom: 4px;
   color: #1a1a2e;
 }
 
 .popup-cathedral {
   font-style: italic;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: #333;
   margin-bottom: 3px;
 }
 
 .popup-dates {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #888;
   margin-bottom: 5px;
 }
 
 .popup-note {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #555;
   border-top: 1px solid #eee;
   padding-top: 5px;
@@ -99,7 +146,7 @@
 
 .popup-link {
   display: inline-block;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #1a73e8;
   text-decoration: none;
 }
@@ -108,28 +155,29 @@
   text-decoration: underline;
 }
 
+/* ── Timeline ──────────────────────────────────────── */
 .timeline {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 20px;
+  gap: 10px;
+  padding: 8px 14px;
   background: #1a1a2e;
   flex-shrink: 0;
 }
 
 .timeline-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #e9c46a;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  min-width: 30px;
+  min-width: 26px;
 }
 
 .timeline-bound {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #aaa;
-  min-width: 36px;
+  min-width: 34px;
   text-align: center;
 }
 
@@ -138,7 +186,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+}
+
+.timeline-slider {
+  width: 100%;
+  accent-color: #e9c46a;
+  cursor: pointer;
+  height: 6px;
 }
 
 .timeline-controls {
@@ -152,50 +207,64 @@
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.05em;
-  min-width: 44px;
+  min-width: 46px;
   text-align: center;
 }
 
 .timeline-btn {
   background: #2e2e4e;
-  border: 1px solid #444;
+  border: 1px solid #555;
   color: #e9c46a;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .timeline-btn:hover {
   background: #3a3a5e;
 }
 
-.timeline-slider {
-  width: 100%;
-  accent-color: #e9c46a;
-  cursor: pointer;
+.timeline-btn:active {
+  background: #4a4a6e;
 }
 
-.legend-empty {
-  font-size: 0.82rem;
-  color: #999;
-  font-style: italic;
-}
+/* ── Mobile tweaks ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 12px 0;
+    gap: 6px;
+  }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: #333;
-}
+  .header h1 {
+    font-size: 1rem;
+  }
 
-.legend-dot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
+  .tab {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  .timeline {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .timeline-label,
+  .timeline-bound {
+    display: none;
+  }
+
+  .timeline-btn {
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 0.9rem;
+  }
 }
