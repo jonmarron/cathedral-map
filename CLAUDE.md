@@ -25,3 +25,5 @@ Each location entry carries `cathedral`, `dates`, `note`, and `wiki` fields rend
 **Leaflet icon fix** — default marker icons are broken by Vite's asset pipeline. They are patched at module level by deleting `_getIconUrl` and calling `L.Icon.Default.mergeOptions` with CDN URLs (unpkg). This must stay at the top of `App.jsx`.
 
 **Tab switching** — `key={activeTab}` on `<MapContainer>` forces a full remount when the tab changes, resetting the map view to the epoch's `center`/`zoom`.
+
+**Timeline filter** — each location entry has a `startYear`. The `currentYear` state (driven by a range slider + ±1/±5 step buttons) controls visibility: markers render at 50% opacity and polylines at 20% opacity when `startYear > currentYear`. `getYearRange` computes `[min, max]` from all `startYear` values in the active epoch, padded by `TIMELINE_PADDING = 25`. Switching tabs resets `currentYear` to the epoch's `maxYear` via `useEffect`.

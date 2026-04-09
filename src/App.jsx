@@ -278,15 +278,43 @@ function getYearRange(epoch) {
   return [Math.min(...years) - TIMELINE_PADDING, Math.max(...years) + TIMELINE_PADDING]
 }
 
+function wikiThumbUrl(wikiUrl) {
+  const title = wikiUrl.split('/wiki/')[1]
+  const domain = wikiUrl.match(/\/\/([\w.]+)\//)[1]
+  return `https://${domain}/api/rest_v1/page/summary/${title}`
+}
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('Primer Gótico')
   const epoch = EPOCHS[activeTab]
   const [minYear, maxYear] = getYearRange(epoch)
   const [currentYear, setCurrentYear] = useState(maxYear)
+  const [images, setImages] = useState({})
 
   useEffect(() => {
     const [, max] = getYearRange(EPOCHS[activeTab])
     setCurrentYear(max)
+  }, [activeTab])
+
+  useEffect(() => {
+    const ep = EPOCHS[activeTab]
+    const wikiUrls = ep.type === 'routes'
+      ? [ep.paris.wiki, ...ep.destinations.map(d => d.wiki)]
+      : ep.groups.flatMap(g => g.locations.map(l => l.wiki))
+
+    setImages({})
+    Promise.all(wikiUrls.map(async url => {
+      try {
+        const res = await fetch(wikiThumbUrl(url))
+        const data = await res.json()
+        if (data.thumbnail?.source) return [url, data.thumbnail.source]
+      } catch {}
+      return null
+    })).then(results => {
+      const map = {}
+      results.forEach(r => { if (r) map[r[0]] = r[1] })
+      setImages(map)
+    })
   }, [activeTab])
 
   const built = (startYear) => startYear <= currentYear
@@ -319,6 +347,7 @@ export default function App() {
             <Marker position={PARIS} opacity={built(epoch.paris.startYear) ? 1 : 0.5}>
               <Popup>
                 <div className="popup">
+                  {images[epoch.paris.wiki] && <img className="popup-image" src={images[epoch.paris.wiki]} alt={epoch.paris.cathedral} />}
                   <div className="popup-city">París</div>
                   <div className="popup-cathedral">{epoch.paris.cathedral}</div>
                   <div className="popup-dates">{epoch.paris.dates}</div>
@@ -341,6 +370,7 @@ export default function App() {
                 <Marker position={dest.coords} opacity={built(dest.startYear) ? 1 : 0.5}>
                   <Popup>
                     <div className="popup">
+                      {images[dest.wiki] && <img className="popup-image" src={images[dest.wiki]} alt={dest.cathedral} />}
                       <div className="popup-city">París → {dest.name}</div>
                       <div className="popup-cathedral">{dest.cathedral}</div>
                       <div className="popup-dates">{dest.dates}</div>
@@ -359,6 +389,7 @@ export default function App() {
             <Marker key={loc.name} position={loc.coords} opacity={built(loc.startYear) ? 1 : 0.5}>
               <Popup>
                 <div className="popup">
+                  {images[loc.wiki] && <img className="popup-image" src={images[loc.wiki]} alt={loc.cathedral} />}
                   <div className="popup-city" style={{ color: COUNTRY_COLORS[group.country] }}>
                     {loc.name} · {group.country}
                   </div>
